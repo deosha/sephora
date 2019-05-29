@@ -8,3 +8,14 @@ jobs:
     - stage: bake docker image
       script:
       - docker build -t sephora .
+
+    - stage: push docker image
+      script:
+      - docker push deojha1771/sephora:latest
+
+    - stage: test
+      script:
+      - docker run -dit deojha1771/sephora:latest
+
+
+
