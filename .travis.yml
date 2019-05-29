@@ -11,35 +11,16 @@ env:
 
 jobs:
   include:
-    - stage: bake docker image
+    - stage: bake and push docker image
       script:
       - docker build -t sephora .
-      - mkdir -p ${CACHE_FOLDER}
-      - docker save ${IMAGE} | gzip -c > ${CACHE_FILE}
-
-
-    - stage: tag docker image
-      script:
-      - ls -la ${CACHE_FOLDER}
-      - if [[ -f ${CACHE_FILE} ]]; then docker load -i ${CACHE_FILE}; fi
-      - docker images && docker tag sephora:latest deojha1771/sephora:latest
-
-    - stage: push docker image
-      script:
-      - ls -la ${CACHE_FOLDER}
-      - if [[ -f ${CACHE_FILE} ]]; then docker load -i ${CACHE_FILE}; fi
+      - docker tag sephora:latest deojha1771/sephora:latest
       - docker push deojha1771/sephora:latest
 
     - stage: test
       script:
-      - ls -la ${CACHE_FOLDER}
-      - if [[ -f ${CACHE_FILE} ]]; then docker load -i ${CACHE_FILE}; fi
       - docker run -dit deojha1771/sephora:latest
 
-cache:
-  bundler: true
-  directories:
-    - ${CACHE_FOLDER}
 
 
 
