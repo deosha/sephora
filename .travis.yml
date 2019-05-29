@@ -7,11 +7,11 @@ jobs:
   include:
     - stage: bake docker image
       script:
-      - docker build -t sephora .
+      - docker build -t sephora . && docker images
 
     - stage: tag docker image
       script:
-      - docker tag sephora:latest deojha1771/sephora:latest
+      - docker images && docker tag sephora:latest deojha1771/sephora:latest
 
     - stage: push docker image
       script:
