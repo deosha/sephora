@@ -1,9 +1,6 @@
 # README
 [![Build Status](https://travis-ci.org/deosha/sephora.svg?branch=master)](https://travis-ci.org/deosha/sephora)
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
 
 * Ruby version: 2.3 with Rails 5.0.1
 
