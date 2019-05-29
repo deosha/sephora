@@ -5,9 +5,3 @@ services:
 
 before_install:
   - docker build -t sephora .
-
-deploy:
-  provider: script
-  script: bash docker_push
-  on:
-    branch: master
