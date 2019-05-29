@@ -15,6 +15,7 @@ jobs:
       script:
       - docker build -t sephora .
       - docker tag sephora:latest deojha1771/sephora:latest
+      - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
       - docker push deojha1771/sephora:latest
 
     - stage: test
