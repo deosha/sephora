@@ -1,12 +1,12 @@
 [
   {
     "name": "sephora-frontend",
-    "image": "880758882511.dkr.ecr.${region}.amazonaws.com/sephora:${tag}",
+    "image": "deojha1771/sephora:${tag}",
     "memory": 256,
     "cpu": 128,
     "portMappings": [
       {
-        "hostPort": 0,
+        "hostPort": 80,
         "containerPort": 3000,
         "protocol": "tcp"
       }

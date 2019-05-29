@@ -52,12 +52,6 @@ resource "aws_ecs_service" "frontend" {
     field = "cpu"
   }
 
-  load_balancer {
-    target_group_arn = "${var.alb_target_group_arn}"
-    container_name = "sephora-frontend"
-    container_port = 3000
-  }
-
   placement_constraints {
     type = "distinctInstance"
   }

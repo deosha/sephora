@@ -10,4 +10,4 @@ region = "us-west-2"
 # Populate this value to reflect the name of your software environment for the project, ideally in the form of project-environment
 env = "demo"
 key_pair_name = "sephora"
-instance_type = "t2.micro"
+instance_type = "t2.small"

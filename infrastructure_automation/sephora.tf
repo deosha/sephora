@@ -18,9 +18,7 @@ data "terraform_remote_state" "infra_state" {
 module "Network-And-DNS" {
   source = "./modules/Network-And-DNS"
   env = "${var.env}"
-  health_check_path = "${var.health_check_path}"
-  deregistration_delay = "${var.deregistration_delay}"
-  security_group = "${module.Security-And-Authentications.alb-sg-id}"
+  security_group = "${module.Security-And-Authentications.asg-sg-id}"
 }
 
 module "Security-And-Authentications" {
@@ -37,9 +35,8 @@ module "Instances-And-LoadBalancers" {
   vpc_id = "${module.Network-And-DNS.id}"
   cluster = "${module.Containers.cluster_name}"
   env = "${var.env}"
-  key_name = "${var.key_pair_name}"
-  alb_target_group_arn = "${module.Network-And-DNS.alb_target_group_arn}"
   security_group = "${module.Security-And-Authentications.asg-sg-id}"
+  key_name = "${var.key_pair_name}"
   nat_gateway1_id = "${module.Network-And-DNS.nat_gateway1_id}"
   nat_gateway2_id = "${module.Network-And-DNS.nat_gateway2_id}"
   instance_type = "${var.instance_type}"
@@ -51,7 +48,6 @@ module "Containers" {
   env = "${var.env}"
   region = "${var.region}"
   tag = "${var.tag}"
-  alb_target_group_arn = "${module.Network-And-DNS.alb_target_group_arn}"
 }
 
 

@@ -196,49 +196,6 @@ resource "aws_route_table_association" "rta1-private-subnet2" {
   route_table_id = "${aws_route_table.rt_ngw2.id}"
 }
 
-resource "aws_alb_target_group" "alb-tg" {
-  name                 = "sephora-alb-engine-tg-${var.env}"
-  port                 = 3000
-  protocol             = "HTTP"
-  vpc_id               = "${aws_vpc.vpc.id}"
-  deregistration_delay = "${var.deregistration_delay}"
-
-  health_check {
-    path     = "${var.health_check_path}"
-    protocol = "HTTP"
-  }
-
-  tags {
-    Name = "sephora-engine-alb-tg-${var.env}"
-    Environment = "${var.env}"
-    Created_By = "Terraform"
-  }
-  depends_on = ["aws_alb.alb"]
-}
-
-resource "aws_alb" "alb" {
-  name            = "sephora-engine-alb-${var.env}"
-  subnets         = ["${aws_subnet.public-subnet1.id}","${aws_subnet.public-subnet2.id}"]
-  security_groups = ["${var.security_group}"]
-  idle_timeout    = "300"
-
-  tags {
-    Name        = "sephora-engine-alb-${var.env}"
-    Environment = "${var.env}"
-    Created_By = "Terraform"
-  }
-}
-
-resource "aws_alb_listener" "alb-listener" {
-  load_balancer_arn = "${aws_alb.alb.id}"
-  port              = "80"
-  protocol          = "HTTP"
-
-  default_action {
-    target_group_arn = "${aws_alb_target_group.alb-tg.id}"
-    type             = "forward"
-  }
-}
 
 
 

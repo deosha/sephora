@@ -10,10 +10,6 @@ output "igw" {
   value = "${aws_internet_gateway.igw.id}"
 }
 
-output "sephora_engine_alb_target_group" {
-  value = "${aws_alb_target_group.alb-tg.arn}"
-}
-
 output "private_subnet_id1" {
   value = "${aws_subnet.private-subnet1.id}"
 }
@@ -38,6 +34,3 @@ output "nat_gateway2_id" {
   value = "${aws_nat_gateway.ngw2.id}"
 }
 
-output "alb_target_group_arn" {
-  value = "${aws_alb_target_group.alb-tg.arn}"
-}

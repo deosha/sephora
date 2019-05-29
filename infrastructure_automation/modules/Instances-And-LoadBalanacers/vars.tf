@@ -63,27 +63,18 @@ variable "public_subnet_ids" {
   description = "The list of public subnets to place the instances in"
 }
 
-variable "load_balancers" {
-  type        = "list"
-  default     = []
-  description = "The load balancers to couple to the instances. Only used when NOT using ALB"
-}
-
-variable "alb_target_group_arn" {
-  description = "arn of the alb target group"
-}
 
 variable "key_name" {
   description = "SSH key name to be used"
 }
 
+variable "security_group" {
+  description = "asg security groups"
+}
+
 variable "custom_userdata" {
   default     = ""
   description = "Inject extra command in the instance template to be run on boot"
-}
-
-variable "security_group" {
-  description = "ECS Instance Security Group"
 }
 
 variable "nat_gateway1_id" {

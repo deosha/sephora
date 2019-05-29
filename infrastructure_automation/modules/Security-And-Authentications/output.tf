@@ -1,8 +1,3 @@
-output "alb-sg-id" {
-  value = "${aws_security_group.alb-sg.id}"
-}
-
-
 output "asg-sg-id" {
   value = "${aws_security_group.asg-sg.id}"
 }
