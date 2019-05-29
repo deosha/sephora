@@ -1,0 +1,248 @@
+resource "aws_vpc" "vpc" {
+  cidr_block       = "10.0.0.0/16"
+  enable_dns_support = true
+  enable_dns_hostnames = true
+
+  tags {
+    Name = "sephora-vpc-${var.env}"
+    Environment = "${var.env}"
+    Created_By = "Terraform"
+  }
+}
+
+data "aws_availability_zones" "available" {}
+
+resource "aws_subnet" "public-subnet1" {
+  availability_zone = "${data.aws_availability_zones.available.names[0]}"
+  vpc_id     = "${aws_vpc.vpc.id}"
+  cidr_block = "10.0.1.0/24"
+  tags {
+    Name = "sephora-public-subnet1-${var.env}"
+    Environment = "${var.env}"
+    Created_By = "Terraform"
+  }
+}
+
+resource "aws_subnet" "public-subnet2" {
+  availability_zone = "${data.aws_availability_zones.available.names[1]}"
+  vpc_id     = "${aws_vpc.vpc.id}"
+  cidr_block = "10.0.2.0/24"
+
+  tags {
+    Name = "sephora-public-subnet2-${var.env}"
+    Environment = "${var.env}"
+    Created_By = "Terraform"
+  }
+}
+
+resource "aws_subnet" "private-subnet1" {
+  availability_zone = "${data.aws_availability_zones.available.names[0]}"
+  vpc_id     = "${aws_vpc.vpc.id}"
+  cidr_block = "10.0.3.0/24"
+
+  tags {
+    Name = "sephora-private-subnet1-${var.env}"
+    Environment = "${var.env}"
+    Created_By = "Terraform"
+  }
+}
+
+resource "aws_subnet" "private-subnet2" {
+  availability_zone = "${data.aws_availability_zones.available.names[1]}"
+  vpc_id     = "${aws_vpc.vpc.id}"
+  cidr_block = "10.0.4.0/24"
+
+  tags {
+    Name = "sephora-private-subnet2-${var.env}"
+    Environment = "${var.env}"
+    Created_By = "Terraform"
+  }
+}
+
+
+resource "aws_internet_gateway" "igw" {
+  vpc_id = "${aws_vpc.vpc.id}"
+
+  tags {
+    Name = "sephora-internet-gateway-${var.env}"
+    Environment = "${var.env}"
+    Created_By = "Terraform"
+  }
+}
+
+resource "aws_nat_gateway" "ngw1" {
+  allocation_id = "${aws_eip.eip-ngw1.id}"
+  subnet_id     = "${aws_subnet.public-subnet1.id}"
+
+  tags {
+    Name = "sephora-nat-gateway1-${var.env}"
+    Environment = "${var.env}"
+    Created_By = "Terraform"
+  }
+
+  depends_on = ["aws_internet_gateway.igw"]
+}
+
+resource "aws_nat_gateway" "ngw2" {
+  allocation_id = "${aws_eip.eip-ngw2.id}"
+  subnet_id     = "${aws_subnet.public-subnet2.id}"
+
+  tags {
+    Name = "sephora-nat-gateway2-${var.env}"
+    Environment = "${var.env}"
+    Created_By = "Terraform"
+  }
+
+  depends_on = ["aws_internet_gateway.igw"]
+}
+
+resource "aws_eip" "eip-ngw1" {
+  vpc      = true
+
+  tags {
+    Name = "sephora-eip-nat-gateway1-${var.env}"
+    Environment = "${var.env}"
+    Created_By = "Terraform"
+  }
+}
+
+resource "aws_eip" "eip-ngw2" {
+  vpc      = true
+
+  tags {
+    Name = "sephora-eip-nat-gateway2-${var.env}"
+    Environment = "${var.env}"
+    Created_By = "Terraform"
+  }
+}
+
+resource "aws_route_table" "rt_igw1" {
+  vpc_id = "${aws_vpc.vpc.id}"
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = "${aws_internet_gateway.igw.id}"
+  }
+
+  tags {
+    Name = "sephora-route-table1-igw-${var.env}"
+    Environment = "${var.env}"
+    Created_By = "Terraform"
+  }
+}
+
+resource "aws_route_table" "rt_igw2" {
+  vpc_id = "${aws_vpc.vpc.id}"
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = "${aws_internet_gateway.igw.id}"
+  }
+
+  tags {
+    Name = "sephora-route-table2-igw-${var.env}"
+    Environment = "${var.env}"
+    Created_By = "Terraform"
+  }
+}
+
+resource "aws_route_table" "rt_ngw1" {
+  vpc_id = "${aws_vpc.vpc.id}"
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = "${aws_nat_gateway.ngw1.id}"
+  }
+
+  tags {
+    Name = "sephora-route-table-ngw1-${var.env}"
+    Environment = "${var.env}"
+    Created_By = "Terraform"
+  }
+}
+
+resource "aws_route_table" "rt_ngw2" {
+  vpc_id = "${aws_vpc.vpc.id}"
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = "${aws_nat_gateway.ngw2.id}"
+  }
+
+  tags {
+    Name = "sephora-route-table-ngw2-${var.env}"
+    Environment = "${var.env}"
+    Created_By = "Terraform"
+  }
+}
+
+resource "aws_route_table_association" "rta1-public-subnet1" {
+  subnet_id      = "${aws_subnet.public-subnet1.id}"
+  route_table_id = "${aws_route_table.rt_igw1.id}"
+}
+
+resource "aws_route_table_association" "rta1-public-subnet2" {
+  subnet_id      = "${aws_subnet.public-subnet2.id}"
+  route_table_id = "${aws_route_table.rt_igw2.id}"
+}
+
+resource "aws_route_table_association" "rta1-private-subnet1" {
+  subnet_id      = "${aws_subnet.private-subnet1.id}"
+  route_table_id = "${aws_route_table.rt_ngw1.id}"
+}
+
+resource "aws_route_table_association" "rta1-private-subnet2" {
+  subnet_id      = "${aws_subnet.private-subnet2.id}"
+  route_table_id = "${aws_route_table.rt_ngw2.id}"
+}
+
+resource "aws_alb_target_group" "alb-tg" {
+  name                 = "sephora-alb-engine-tg-${var.env}"
+  port                 = 3000
+  protocol             = "HTTP"
+  vpc_id               = "${aws_vpc.vpc.id}"
+  deregistration_delay = "${var.deregistration_delay}"
+
+  health_check {
+    path     = "${var.health_check_path}"
+    protocol = "HTTP"
+  }
+
+  tags {
+    Name = "sephora-engine-alb-tg-${var.env}"
+    Environment = "${var.env}"
+    Created_By = "Terraform"
+  }
+  depends_on = ["aws_alb.alb"]
+}
+
+resource "aws_alb" "alb" {
+  name            = "sephora-engine-alb-${var.env}"
+  subnets         = ["${aws_subnet.public-subnet1.id}","${aws_subnet.public-subnet2.id}"]
+  security_groups = ["${var.security_group}"]
+  idle_timeout    = "300"
+
+  tags {
+    Name        = "sephora-engine-alb-${var.env}"
+    Environment = "${var.env}"
+    Created_By = "Terraform"
+  }
+}
+
+resource "aws_alb_listener" "alb-listener" {
+  load_balancer_arn = "${aws_alb.alb.id}"
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    target_group_arn = "${aws_alb_target_group.alb-tg.id}"
+    type             = "forward"
+  }
+}
+
+
+
+
+
+
+
