@@ -19,6 +19,13 @@ application up and running.
 
 * Services (job queues, cache servers, search engines, etc.)
 
-* Deployment instructions: terraform init -backend-config="bucket=sephora-state-files" -backend-config="key=demo/sephora.tfstate" -backend-config="region=us-west-2" -backend=true -force-copy -get=true -input && terraform apply -input=false --auto-approve --var-file=sephora.tfvars. You need to set AWS ACCESS KEY ID and AWS SECRET ACCESS KEY. Then you can hit <instance-public-ip> on browser to open rails blank page
+* Deployment instructions: 
+terraform init -backend-config="bucket=sephora-state-files" -backend-config="key=demo/sephora.tfstate" -backend-config="region=us-west-2" -backend=true -force-copy -get=true -input && terraform apply -input=false --auto-approve --var-file=sephora.tfvars
 
-* ...
+You need to set AWS ACCESS KEY ID and AWS SECRET ACCESS KEY. Then you can hit <instance-public-ip> on browser to open rails blank page
+
+* Logging and Monitoring: Can be viewed in Cloudwatch logs after deployment. Monitoring yet to be done
+
+* CI: .travis.yml is in repository. Jenkinsfile can be committed if needed
+
+
