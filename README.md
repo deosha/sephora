@@ -4,11 +4,11 @@
 
 * Ruby version: 2.3 with Rails 5.0.1
 
-* System dependencies: The deployment can be done from Windows/Linux?macos but infrastructure is created on AWS
+* System dependencies: The deployment can be done from Windows/Linux/macos but infrastructure is created on AWS
 
-* Configuration: You need to have Terraform binary(Try avoiding 0.12 because many things have changed. 0.11 will win rk best). You need to configure AWS access keys and secret keys for terraform to read
+* Configuration: You need to have Terraform binary(Try avoiding 0.12 because many things have changed. 0.11 will work best). You need to configure AWS access keys and secret keys for terraform to read
 
-* Database creation: sqllite is used for now due to pricing constraints. RDS is recommended for high avalaibility and RDS with read replica for hing read/write
+* Database creation: sqllite is used for now due to pricing constraints. RDS is recommended for high avalaibility and RDS with read replica for high read/write
 
 * Database initialization: Secret Management yet to be done
 
