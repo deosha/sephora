@@ -3,23 +3,44 @@ language: ruby
 services:
   - docker
 
+env:
+  global:
+    - NAME=sephora
+    - CACHE_FOLDER=$HOME/docker-images
+    - CACHE_FILE=${CACHE_FOLDER}/${NAME}-${TRAVIS_COMMIT}.tgz
+
 jobs:
   include:
     - stage: bake docker image
       script:
-      - docker build -t sephora . && docker images
+      - docker build -t sephora .
+      - mkdir -p ${CACHE_FOLDER}
+      - docker save ${IMAGE} | gzip -c > ${CACHE_FILE}
+
 
     - stage: tag docker image
       script:
+      - ls -la ${CACHE_FOLDER}
+      - if [[ -f ${CACHE_FILE} ]]; then docker load -i ${CACHE_FILE}; fi
       - docker images && docker tag sephora:latest deojha1771/sephora:latest
 
     - stage: push docker image
       script:
+      - ls -la ${CACHE_FOLDER}
+      - if [[ -f ${CACHE_FILE} ]]; then docker load -i ${CACHE_FILE}; fi
       - docker push deojha1771/sephora:latest
 
     - stage: test
       script:
+      - ls -la ${CACHE_FOLDER}
+      - if [[ -f ${CACHE_FILE} ]]; then docker load -i ${CACHE_FILE}; fi
       - docker run -dit deojha1771/sephora:latest
+
+cache:
+  bundler: true
+  directories:
+    - ${CACHE_FOLDER}
+
 
 
 
