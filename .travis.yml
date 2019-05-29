@@ -9,6 +9,10 @@ jobs:
       script:
       - docker build -t sephora .
 
+    - stage: tag docker image
+      script:
+      - docker tag sephora:latest deojha1771/sephora:latest
+
     - stage: push docker image
       script:
       - docker push deojha1771/sephora:latest
