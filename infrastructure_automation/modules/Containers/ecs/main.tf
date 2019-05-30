@@ -57,6 +57,6 @@ resource "aws_ecs_service" "frontend" {
   }
 
   provisioner "local-exec" {
-    command = "sleep 60"
+    command = "sleep 120"
   }
 }
