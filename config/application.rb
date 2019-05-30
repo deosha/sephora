@@ -14,7 +14,7 @@ module Src
   end
 end
 
-config_files = ['secrets.yml']
+config_files = ['.env']
 
     config_files.each do |file_name|
       file_path = File.join(Rails.root, 'config', file_name)
