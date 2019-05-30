@@ -12,11 +12,13 @@
 
 * Database initialization: secrets.yml is added in .gitignore. Contents of secrets.yml:
 development:
-  secret_key_base: <%= ENV["SECRET_KEY_BASE_DEV"] %>
+  secret_key_base: b94ded7bb2d45121cad2546972722482658c95f64f4a0cbd9a5bc4dba8f39dbabbdcd143fdf47a85058f9a7736defc9c3d23d2d7d8e469ee4710bd1af13d3f19
+
 test:
-  secret_key_base: <%= ENV["SECRET_KEY_BASE_TEST"] %>
+  secret_key_base: 84e70391efb593f5007c45f5c44e3add8d7c38097531fb63b289a0d723ecf70cb63e937014d8f6fc2d7d139c8d8fd44ee610b6940c03b106cbb9d4c1549cbb5d
+
 production:
-  secret_key_base: <%= ENV["SECRET_KEY_BASE_PROD"] %>
+  secret_key_base: <%= ENV["SECRET_KEY_BASE"] %>
 
   config/application.rb is used to read these env variables.
 
