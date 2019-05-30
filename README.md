@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/deosha/sephora.svg?branch=master)](https://travis-ci.org/deosha/sephora)
 
 
-* Ruby version: 2.3 with Rails 5.0.1
+* Ruby version: 2.3.3 with Rails 5.0.1
 
 * System dependencies: The deployment can be done from Windows/Linux/macos but infrastructure is created on AWS
 
@@ -10,13 +10,20 @@
 
 * Database creation: sqllite is used for now due to pricing constraints. RDS is recommended for high avalaibility and RDS with read replica for high read/write
 
-* Database initialization: Secret Management yet to be done
+* Database initialization: secrets.yml is added in .gitignore. Contents of secrets.yml:
+development:
+  secret_key_base: <%= ENV["SECRET_KEY_BASE_DEV"] %>
+test:
+  secret_key_base: <%= ENV["SECRET_KEY_BASE_TEST"] %>
+production:
+  secret_key_base: <%= ENV["SECRET_KEY_BASE_PROD"] %>
+
+  config/application.rb is used to read these env variables.
 
 * How to run the test suite: NA
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions: 
+* Deployment instructions:
+cd infrastructure_automation
 terraform init -backend-config="bucket=sephora-state-files" -backend-config="key=demo/sephora.tfstate" -backend-config="region=us-west-2" -backend=true -force-copy -get=true -input && terraform apply -input=false --auto-approve --var-file=sephora.tfvars
 
 You need to set AWS ACCESS KEY ID and AWS SECRET ACCESS KEY. Then you can hit <instance-public-ip> on browser to open rails blank page
